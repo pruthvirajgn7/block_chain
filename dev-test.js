@@ -1,4 +1,4 @@
-const Block = require('./block');
+const Block = require('./blockchain/block');
 
 let block = new Block('1', '2', '3', '4');
 

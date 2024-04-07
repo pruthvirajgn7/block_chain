@@ -38,6 +38,12 @@ class Block {
     static hash(timestamp, lastHash, data){
         return SHA256(`${timestamp}${lastHash}${data}`).toString();
     }
+
+    // This function is used to generate block's hash for blockchain validation purpose
+    static blockHash(block){
+        const { timestamp, lastHash, data} = block;
+        return Block.hash(timestamp, lastHash, data);
+    }
 }
 
 module.exports = Block;
