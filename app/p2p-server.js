@@ -1,4 +1,4 @@
-const websocket = require('ws');
+const Websocket = require('ws');
 
 const P2P_PORT = process.env.P2P_PORT || 5001;
 const peers = process.env.PEERS ? process.env.PEERS.split(',') : [];
@@ -9,10 +9,11 @@ class P2pServer{
         this.sockets = [];
     }
 
+    // used to start the server
     listen() {
-        const server = new websocket.Server({ port: P2P_PORT });  //creating the p2p server
+        const server = new Websocket.Server({ port: P2P_PORT });  //creating the p2p server
         
-        //gets socket when connected and socket is added to sockets array
+        // event listener for new socket connection for this server
         server.on('connection', socket => this.connectSocket(socket)); 
         
         this.connectToPeers();
@@ -23,7 +24,7 @@ class P2pServer{
     connectToPeers(){
         peers.forEach(peer => {
             // example peer address is ws://localhost:5001
-            const socket = new websocket(peer);
+            const socket = new Websocket(peer);
 
             socket.on('open', () => this.connectSocket(socket));
         })
@@ -39,9 +40,11 @@ class P2pServer{
     }
 
     messageHandler(socket){
+        // this event listener on any message from sockets
+        // replaces its own chain if received chain is valid and longer
         socket.on('message', message => {
             const data = JSON.parse(message);
-
+            // console.log('data', data);
             this.blockchain.replaceChain(data);
         });
     }
